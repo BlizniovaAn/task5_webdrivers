@@ -22,7 +22,42 @@ public class EmailSenderTest extends AbstractEmailTest{
         logout();
     }
 
-    @Test
+    @Test(groups = "P0", testName = "sentLetterIsPresentInSentFolderTest", description = "Verify set letter is present in Sent folder after mailing")
+    public void sentLetterIsAbsentInSentFolderAfterRemovingTest() throws InterruptedException {
+        loginPage.populatePasswordInput();
+        loginPage.clickNextButtonAfterPassword();
+
+        mainPage.clickWriteButton();
+        populateNewLetterWithData();
+        newLetterPage.clickSendButton();
+
+        sentFolderPage.openPage();
+        WebElement sentLetter = sentFolderPage.getSentLetter();
+        Assert.assertTrue(sentLetter.isDisplayed());
+
+        sentFolderPage.checkCheckboxOfLastSentLetter().clickRemoveLetterButton();
+        Assert.assertTrue(sentFolderPage.getAlertDialog().isDisplayed());
+        sentFolderPage.clickOkButton();
+
+    }
+
+    @Test(groups = "P0", enabled = false, testName = "sendEmptyEmailTest", description = "Verify sending empty email is forbidden")
+    public void sendEmptyEmailTest() {
+        loginPage.populatePasswordInput();
+        loginPage.clickNextButtonAfterPassword();
+
+        mainPage.clickWriteButton();
+        newLetterPage.clickSendButton();
+        Assert.assertTrue(errorPopupPage.getAlertDialog().isDisplayed());
+        Assert.assertEquals(errorPopupPage.getErrorSpanText(), "Ошибка");
+        Assert.assertEquals(errorPopupPage.getErrorMessage(), "Укажите как минимум одного получателя.");
+        errorPopupPage.clickOKButton();
+
+        newLetterPage.closeLetter();
+        logout();
+    }
+
+    @Test(groups = "P0", enabled = false, testName = "sendEmailTest", description = "Verify sending an email")
     public void sendEmailTest() throws InterruptedException {
         //loginPage.open();
         loginPage.populatePasswordInput();
@@ -71,6 +106,17 @@ public class EmailSenderTest extends AbstractEmailTest{
                 "Черновики позволяют хранить письма, еще не готовые к отправке."));
 
         logout();
+    }
+
+    private void populateNewLetterWithData(){
+        String toEmail = "blizniova.an@gmail.com";
+        newLetterPage.populateToInput(toEmail);
+
+        String subject = "Web driver task " + random.nextInt(1000);
+        newLetterPage.populateSubjectbox(subject);
+
+        String text = "I am working on new Web driver task!";
+        newLetterPage.populateBody(text);
     }
 
 }

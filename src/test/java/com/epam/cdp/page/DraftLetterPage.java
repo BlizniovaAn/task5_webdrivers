@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 public class DraftLetterPage extends NewLetterPage {
 
     @FindBy(xpath = "//div[@class='oL aDm az9']//span[@email='blizniova.an@gmail.com']")
-    WebElement toInput;
+    private WebElement toInput;
 
     public DraftLetterPage(WebDriver driver) {
         super(driver);

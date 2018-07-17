@@ -10,25 +10,26 @@ import static com.epam.cdp.util.Constants.DRAFT_LINK_TEXT_1;
 public class MainPage extends AbstractPage {
 
     @FindBy(css = "a.gb_b.gb_db.gb_R")
-    WebElement webDriverIcon;
+    private WebElement webDriverIcon;
 
     @FindBy(xpath = "//div[@class='z0']//div[@class='T-I J-J5-Ji T-I-KE L3']")
-    WebElement writeButton;
+    private WebElement writeButton;
 
     @FindBy(linkText = DRAFT_LINK_TEXT_1)
-    WebElement draftLink1;
+    private WebElement draftLink1;
 
     @FindBy(css = "a[href*='https://accounts.google.com/SignOutOptions']")
-    WebElement signOutIcon;
+    private WebElement signOutIcon;
 
     @FindBy(css = "a[href*='https://accounts.google.com/Logout']")
-    WebElement signOutLink;
+    private WebElement signOutLink;
 
     public MainPage(WebDriver driver) {
         super(driver);
     }
 
     public MainPage clickWriteButton(){
+        waitForElementClickable(writeButton);
         writeButton.click();
         return this;
     }

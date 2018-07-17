@@ -10,16 +10,16 @@ public class LoginPage extends AbstractPage{
     private String GOOGLE_POST_URL = "https://mail.google.com";
 
     @FindBy(id = "identifierId")
-    WebElement loginInput;
+    private WebElement loginInput;
 
     @FindBy(name = "password")
-    WebElement passwordInput;
+    private WebElement passwordInput;
 
     @FindBy(id = "identifierNext")
-    WebElement nextButtonAfterLogin;
+    private WebElement nextButtonAfterLogin;
 
     @FindBy(id = "passwordNext")
-    WebElement nextButtonAfterPassword;
+    private WebElement nextButtonAfterPassword;
 
     public LoginPage(WebDriver driver) {
         super(driver);
@@ -49,6 +49,7 @@ public class LoginPage extends AbstractPage{
     }
 
     public LoginPage clickNextButtonAfterPassword(){
+        waitForElementClickable(nextButtonAfterPassword);
         nextButtonAfterPassword.click();
         return this;
     }

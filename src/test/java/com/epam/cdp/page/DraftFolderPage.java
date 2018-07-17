@@ -10,19 +10,19 @@ import static com.epam.cdp.util.Constants.OPEN_DRAFT_FOLDER_URL;
 public class DraftFolderPage extends MainPage{
 
     @FindBy(partialLinkText = DRAFT)
-    WebElement draftLink;
+    private WebElement draftLink;
 
     @FindBy(xpath = "//div[@class='ae4 UI']//tr[@class='zA yO']")
-    WebElement draftLetter;
+    private WebElement draftLetter;
 
     @FindBy(css = "div[gh='tm'] div.J-J5-Ji.J-JN-M-I-Jm span.T-Jo[role='checkbox']")
-    WebElement selectAllCheckbox;
+    private WebElement selectAllCheckbox;
 
     @FindBy(css = "div.T-I.J-J5-Ji.aFh.T-I-ax7.W6eDmd[role='button']>div")
-    WebElement removeAlldraftsButton;
+    private WebElement removeAlldraftsButton;
 
     @FindBy(css = "div[role='main'] table.cf.TB td:first-child")
-    WebElement tableWithLetters;
+    private WebElement tableWithLetters;
 
     public DraftFolderPage(WebDriver driver) {
         super(driver);

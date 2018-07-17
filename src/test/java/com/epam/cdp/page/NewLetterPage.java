@@ -6,19 +6,20 @@ import org.openqa.selenium.support.FindBy;
 
 public class NewLetterPage extends MainPage {
     @FindBy(name = "to")
-    WebElement toInput;
+    protected WebElement toInput;
 
     @FindBy(name = "subjectbox")
-    WebElement subjectbox;
+    protected WebElement subjectbox;
 
     @FindBy(css = "div.Am.Al.editable.LW-avf")
-    WebElement bodyInput;
+    protected WebElement bodyInput;
 
     @FindBy(css = "img.Ha")
-    WebElement cross;
+    protected WebElement cross;
 
     @FindBy(css = "div.T-I.J-J5-Ji.aoO.T-I-atl.L3")
-    WebElement sendButton;
+    protected WebElement sendButton;
+
 
     public NewLetterPage(WebDriver driver) {
         super(driver);
@@ -43,6 +44,7 @@ public class NewLetterPage extends MainPage {
     }
 
     public NewLetterPage closeLetter(){
+        waitForElementClickable(cross);
         cross.click();
         return this;
     }
@@ -71,4 +73,5 @@ public class NewLetterPage extends MainPage {
     public WebElement getSendButton() {
         return sendButton;
     }
+
 }

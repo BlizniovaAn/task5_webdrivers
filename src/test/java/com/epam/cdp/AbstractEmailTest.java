@@ -2,10 +2,12 @@ package com.epam.cdp;
 
 import com.epam.cdp.page.DraftFolderPage;
 import com.epam.cdp.page.DraftLetterPage;
+import com.epam.cdp.page.ErrorPopupPage;
 import com.epam.cdp.page.LoginPage;
 import com.epam.cdp.page.MainPage;
 import com.epam.cdp.page.NewLetterPage;
 import com.epam.cdp.page.SentFolderPage;
+import com.epam.cdp.page.SentLetterPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -16,7 +18,6 @@ import org.testng.annotations.BeforeMethod;
 import java.util.Random;
 
 import static com.epam.cdp.util.Constants.DRAFT;
-import static com.epam.cdp.util.Constants.DRAFT_LINK_TEXT_1;
 
 public class AbstractEmailTest {
     protected Random random;
@@ -28,6 +29,8 @@ public class AbstractEmailTest {
     protected NewLetterPage newLetterPage;
     protected SentFolderPage sentFolderPage;
     protected DraftLetterPage draftLetterPage;
+    protected ErrorPopupPage errorPopupPage;
+    protected SentLetterPage sentLetterPage;
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws InterruptedException {
@@ -42,6 +45,8 @@ public class AbstractEmailTest {
         newLetterPage = new NewLetterPage(driver);
         sentFolderPage = new SentFolderPage(driver);
         draftLetterPage = new DraftLetterPage(driver);
+        errorPopupPage = new ErrorPopupPage(driver);
+        sentLetterPage = new SentLetterPage(driver);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -57,7 +62,6 @@ public class AbstractEmailTest {
     }
 
     protected void logout(){
-        //Navigate to 'signOut' icon
         mainPage.selectSignoutIcon().signOut();
     }
 
