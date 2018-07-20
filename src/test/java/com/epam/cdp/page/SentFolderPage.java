@@ -15,7 +15,7 @@ public class SentFolderPage extends MainPage {
     @FindBy(css = "div[role='main'] table.F.cf.zt tr:first-child div.oZ-jc.T-Jo.J-J5-Ji")
     private WebElement checkboxOfLastSentLetter;
 
-    @FindBy(css = "div[title='Удалить'][role='button']")
+    @FindBy(css = "div[gh='tm'] div.T-I.J-J5-Ji.nX.T-I-ax7.T-I-Js-Gs[role=\"button\"]>div")
     private WebElement removeLetterButton;
 
     @FindBy(xpath = "//div[@class = 'Kj-JD'][@role = 'alertdialog']")
@@ -23,6 +23,9 @@ public class SentFolderPage extends MainPage {
 
     @FindBy(name = "ok")
     private WebElement okButton;
+
+    @FindBy(name = "q")
+    private WebElement searchLabel;
 
     public SentFolderPage(WebDriver driver) {
         super(driver);
@@ -55,9 +58,8 @@ public class SentFolderPage extends MainPage {
         return this;
     }
 
-    public SentFolderPage clickRemoveLetterButton() throws InterruptedException {
-        Thread.sleep(8000);
-        //waitForElementVisible(removeLetterButton);
+    public SentFolderPage clickRemoveLetterButton() {
+        waitForElementVisible(removeLetterButton);
         removeLetterButton.click();
         return this;
     }
@@ -69,6 +71,11 @@ public class SentFolderPage extends MainPage {
 
     public void clickOkButton(){
         okButton.click();
+    }
+
+    public String getSearchLabelText(){
+        waitForElementVisible(searchLabel);
+        return searchLabel.getText();
     }
 
 }

@@ -41,6 +41,7 @@ public class MainPage extends AbstractPage {
     }
 
     public void signOut(){
+        waitForElementClickable(signOutLink);
         signOutLink.click();
     }
 

@@ -5,6 +5,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Map;
+
 import static com.epam.cdp.util.Constants.DRAFT_LINK_TEXT_1;
 import static com.epam.cdp.util.Constants.HANNA_BLIZNIOVA;
 import static com.epam.cdp.util.Constants.VALUE_ATTRIBUTE;
@@ -23,15 +25,17 @@ public class EmailSenderTest extends AbstractEmailTest{
     }
 
     @Test(groups = "P0", testName = "sentLetterIsPresentInSentFolderTest", description = "Verify set letter is present in Sent folder after mailing")
-    public void sentLetterIsAbsentInSentFolderAfterRemovingTest() throws InterruptedException {
+    public void sentLetterIsAbsentInSentFolderAfterRemovingTest(){
         loginPage.populatePasswordInput();
         loginPage.clickNextButtonAfterPassword();
 
         mainPage.clickWriteButton();
-        populateNewLetterWithData();
+        Map<String, String> info = populateNewLetterWithData();
         newLetterPage.clickSendButton();
 
         sentFolderPage.openPage();
+
+        //Check that Sent folder is open
         WebElement sentLetter = sentFolderPage.getSentLetter();
         Assert.assertTrue(sentLetter.isDisplayed());
 
@@ -39,9 +43,14 @@ public class EmailSenderTest extends AbstractEmailTest{
         Assert.assertTrue(sentFolderPage.getAlertDialog().isDisplayed());
         sentFolderPage.clickOkButton();
 
+        //Check that Sent folder is open
+        WebElement removedSentLetter = sentFolderPage.getSentLetter();
+        Assert.assertFalse(removedSentLetter.getText().contains(info.get("subject")), "Verify sent letter was removed.");
+
+        logout();
     }
 
-    @Test(groups = "P0", enabled = false, testName = "sendEmptyEmailTest", description = "Verify sending empty email is forbidden")
+    @Test(groups = "P0", testName = "sendEmptyEmailTest", description = "Verify sending empty email is forbidden")
     public void sendEmptyEmailTest() {
         loginPage.populatePasswordInput();
         loginPage.clickNextButtonAfterPassword();
@@ -54,11 +63,12 @@ public class EmailSenderTest extends AbstractEmailTest{
         errorPopupPage.clickOKButton();
 
         newLetterPage.closeLetter();
+
         logout();
     }
 
-    @Test(groups = "P0", enabled = false, testName = "sendEmailTest", description = "Verify sending an email")
-    public void sendEmailTest() throws InterruptedException {
+    @Test(groups = "P0",  testName = "sendEmailTest", description = "Verify sending a valid email")
+    public void sendEmailTest(){
         //loginPage.open();
         loginPage.populatePasswordInput();
         loginPage.clickNextButtonAfterPassword();
@@ -69,27 +79,19 @@ public class EmailSenderTest extends AbstractEmailTest{
 
         mainPage.clickWriteButton();
 
-        String toEmail = "blizniova.an@gmail.com";
-        newLetterPage.populateToInput(toEmail);
-
-        String subject = "Web driver task " + random.nextInt(1000);
-        newLetterPage.populateSubjectbox(subject);
-
-        String text = "I am working on new Web driver task!";
-        newLetterPage.populateBody(text);
+        Map<String, String> info = populateNewLetterWithData();
 
         newLetterPage.closeLetter();
 
         draftFolderPage.openDraftFolder();
 
-        WebElement draftLink1 = mainPage.getDraftLink1();
-        Assert.assertEquals(draftLink1.getText(), DRAFT_LINK_TEXT_1);
+        Assert.assertEquals(mainPage.getDraftLink1().getText(), DRAFT_LINK_TEXT_1);
 
         //Verify draft letter
         draftFolderPage.selectDraftLetter();
         Assert.assertEquals(HANNA_BLIZNIOVA, draftLetterPage.getToInput().getText());
-        Assert.assertEquals(subject, draftLetterPage.getSubjectbox().getAttribute(VALUE_ATTRIBUTE));
-        Assert.assertEquals(text, draftLetterPage.getBodyInput().getText());
+        Assert.assertEquals(info.get("subject"), draftLetterPage.getSubjectbox().getAttribute(VALUE_ATTRIBUTE));
+        Assert.assertEquals(info.get("text"), draftLetterPage.getBodyInput().getText());
 
         newLetterPage.clickSendButton();
 
@@ -106,17 +108,6 @@ public class EmailSenderTest extends AbstractEmailTest{
                 "Черновики позволяют хранить письма, еще не готовые к отправке."));
 
         logout();
-    }
-
-    private void populateNewLetterWithData(){
-        String toEmail = "blizniova.an@gmail.com";
-        newLetterPage.populateToInput(toEmail);
-
-        String subject = "Web driver task " + random.nextInt(1000);
-        newLetterPage.populateSubjectbox(subject);
-
-        String text = "I am working on new Web driver task!";
-        newLetterPage.populateBody(text);
     }
 
 }

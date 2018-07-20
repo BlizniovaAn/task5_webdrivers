@@ -8,6 +8,7 @@ import com.epam.cdp.page.MainPage;
 import com.epam.cdp.page.NewLetterPage;
 import com.epam.cdp.page.SentFolderPage;
 import com.epam.cdp.page.SentLetterPage;
+import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -15,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import java.util.Map;
 import java.util.Random;
 
 import static com.epam.cdp.util.Constants.DRAFT;
@@ -68,11 +70,22 @@ public class AbstractEmailTest {
     protected void cleanDraftFolderBeforeTest() throws InterruptedException {
         if(!draftFolderPage.getDraftLink().getText().equals(DRAFT)){
             draftFolderPage.openDraftFolder();
-            Thread.sleep(4000);
             draftFolderPage.checkSelectAllCheckbox();
             draftFolderPage.clickRemoveAllbutton();
-            Thread.sleep(4000);
         }
+    }
+
+    protected Map<String, String> populateNewLetterWithData(){
+        String toEmail = "blizniova.an@gmail.com";
+        newLetterPage.populateToInput(toEmail);
+
+        String subject = "Web driver task " + random.nextInt(1000);
+        newLetterPage.populateSubjectbox(subject);
+
+        String text = "I am working on new Web driver task!";
+        newLetterPage.populateBody(text);
+
+        return ImmutableMap.of("email", toEmail, "subject", subject, "text", text);
     }
 
 }
