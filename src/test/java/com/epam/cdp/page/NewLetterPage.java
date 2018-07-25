@@ -1,5 +1,6 @@
 package com.epam.cdp.page;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -50,15 +51,18 @@ public class NewLetterPage extends MainPage {
     }
 
     public NewLetterPage clickSendButton(){
-        sendButton.click();
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", sendButton);
         return this;
     }
 
     public WebElement getToInput() {
+        waitForElementVisible(toInput);
         return toInput;
     }
 
     public WebElement getSubjectbox() {
+        waitForElementVisible(subjectbox);
         return subjectbox;
     }
 

@@ -12,10 +12,14 @@ import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 import java.util.Random;
 
@@ -35,10 +39,11 @@ public class AbstractEmailTest {
     protected SentLetterPage sentLetterPage;
 
     @BeforeMethod(alwaysRun = true)
-    public void setUp() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "D://programms//chromedriver//chromedriver_win32//chromedriver.exe");
+    public void setUp() throws InterruptedException, MalformedURLException {
+        //System.setProperty("webdriver.chrome.driver", "D://programms//chromedriver//chromedriver_win32//chromedriver.exe");
         ChromeOptions chromeOptions = new ChromeOptions();
-        driver = new ChromeDriver(chromeOptions);
+        //driver = new ChromeDriver(chromeOptions);
+        driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), DesiredCapabilities.chrome());
         wait = new WebDriverWait(driver, 90);
         random = new Random();
         loginPage = new LoginPage(driver);
@@ -53,6 +58,7 @@ public class AbstractEmailTest {
 
     @AfterMethod(alwaysRun = true)
     public void cleanUp(){
+        logout();
         driver.quit();
     }
 
@@ -68,11 +74,13 @@ public class AbstractEmailTest {
     }
 
     protected void cleanDraftFolderBeforeTest() throws InterruptedException {
+        login();
         if(!draftFolderPage.getDraftLink().getText().equals(DRAFT)){
             draftFolderPage.openDraftFolder();
             draftFolderPage.checkSelectAllCheckbox();
             draftFolderPage.clickRemoveAllbutton();
         }
+        logout();
     }
 
     protected Map<String, String> populateNewLetterWithData(){

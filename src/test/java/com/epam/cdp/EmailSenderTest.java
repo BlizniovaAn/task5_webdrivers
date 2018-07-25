@@ -5,6 +5,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.net.MalformedURLException;
 import java.util.Map;
 
 import static com.epam.cdp.util.Constants.DRAFT_LINK_TEXT_1;
@@ -17,21 +18,28 @@ import static com.epam.cdp.util.Constants.VALUE_ATTRIBUTE;
 public class EmailSenderTest extends AbstractEmailTest{
 
     @BeforeMethod(alwaysRun = true)
-    public void setUp() throws InterruptedException {
+    public void setUp() throws InterruptedException, MalformedURLException {
         super.setUp();
-        login();
         cleanDraftFolderBeforeTest();
-        logout();
+
+        //loginPage.open();
+        loginPage.populatePasswordInput();
+        loginPage.clickNextButtonAfterPassword();
+
+        //Check login was successfull
+        WebElement webDriverIcon = mainPage.getWebDriverIcon();
+        Assert.assertTrue(webDriverIcon.isDisplayed());
     }
 
     @Test(groups = "P0", testName = "sentLetterIsPresentInSentFolderTest", description = "Verify set letter is present in Sent folder after mailing")
     public void sentLetterIsAbsentInSentFolderAfterRemovingTest(){
-        loginPage.populatePasswordInput();
-        loginPage.clickNextButtonAfterPassword();
-
         mainPage.clickWriteButton();
         Map<String, String> info = populateNewLetterWithData();
+
+        //highlight 'Send' button
+        newLetterPage.highlightElement(newLetterPage.getSendButton());
         newLetterPage.clickSendButton();
+        newLetterPage.unHighlightElement(newLetterPage.getSendButton());
 
         sentFolderPage.openPage();
 
@@ -46,15 +54,10 @@ public class EmailSenderTest extends AbstractEmailTest{
         //Check that Sent folder is open
         WebElement removedSentLetter = sentFolderPage.getSentLetter();
         Assert.assertFalse(removedSentLetter.getText().contains(info.get("subject")), "Verify sent letter was removed.");
-
-        logout();
     }
 
     @Test(groups = "P0", testName = "sendEmptyEmailTest", description = "Verify sending empty email is forbidden")
     public void sendEmptyEmailTest() {
-        loginPage.populatePasswordInput();
-        loginPage.clickNextButtonAfterPassword();
-
         mainPage.clickWriteButton();
         newLetterPage.clickSendButton();
         Assert.assertTrue(errorPopupPage.getAlertDialog().isDisplayed());
@@ -63,20 +66,10 @@ public class EmailSenderTest extends AbstractEmailTest{
         errorPopupPage.clickOKButton();
 
         newLetterPage.closeLetter();
-
-        logout();
     }
 
-    @Test(groups = "P0",  testName = "sendEmailTest", description = "Verify sending a valid email")
+    @Test(groups = "P0", testName = "sendEmailTest", description = "Verify sending a valid email")
     public void sendEmailTest(){
-        //loginPage.open();
-        loginPage.populatePasswordInput();
-        loginPage.clickNextButtonAfterPassword();
-
-        //Check login was successfull
-        WebElement webDriverIcon = mainPage.getWebDriverIcon();
-        Assert.assertTrue(webDriverIcon.isDisplayed());
-
         mainPage.clickWriteButton();
 
         Map<String, String> info = populateNewLetterWithData();
@@ -106,8 +99,6 @@ public class EmailSenderTest extends AbstractEmailTest{
         WebElement tableWithLetters = draftFolderPage.getTableWithLetters();
         Assert.assertTrue(tableWithLetters.getText().equals("Нет сохраненных черновиков.\n" +
                 "Черновики позволяют хранить письма, еще не готовые к отправке."));
-
-        logout();
     }
 
 }
